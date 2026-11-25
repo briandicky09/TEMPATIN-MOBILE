@@ -13,6 +13,7 @@ import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../core/widgets/tempatin_button.dart';
 import '../../../../core/widgets/tempatin_card.dart';
+import '../../../../shared/widgets/app_mode_settings_card.dart';
 import '../../../authentication/presentation/providers/auth_session_provider.dart';
 import '../providers/owner_providers.dart';
 
@@ -278,6 +279,8 @@ class OwnerMoreScreen extends ConsumerWidget {
               ],
             ),
           ),
+          const SizedBox(height: AppSpacing.lg),
+          const AppModeSettingsCard(),
           const SizedBox(height: AppSpacing.lg),
           TempatinButton(
             label: 'Keluar dari Akun',

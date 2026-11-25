@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -8,10 +7,11 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_typography.dart';
-import '../../../../core/config/env.dart';
 import '../../../../core/widgets/status_badge.dart';
 import '../../../../core/widgets/tempatin_button.dart';
 import '../../../../core/widgets/tempatin_card.dart';
+import '../../../../shared/widgets/app_mode_settings_card.dart';
+import '../../../../shared/widgets/app_smart_image.dart';
 import '../../../authentication/presentation/providers/auth_session_provider.dart';
 
 /// User profile screen for Guest & Customer (Owner also links here for profile edit).
@@ -136,28 +136,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ],
           const SizedBox(height: AppSpacing.lg),
-          TempatinCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Informasi Aplikasi', style: AppTypography.headingSm),
-                    StatusBadge(
-                      label: AppEnv.envName.toUpperCase(),
-                      tone: StatusTone.neutral,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  'TEMPATIN Mobile • API: ${AppEnv.apiBaseUrl}',
-                  style: AppTypography.caption,
-                ),
-              ],
-            ),
-          ),
+          const AppModeSettingsCard(),
         ],
       ),
     );
@@ -174,12 +153,12 @@ class _ProfileAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     if (avatarUrl != null && avatarUrl!.isNotEmpty) {
       return ClipOval(
-        child: CachedNetworkImage(
-          imageUrl: avatarUrl!,
+        child: AppSmartImage(
+          source: avatarUrl!,
           width: 56,
           height: 56,
           fit: BoxFit.cover,
-          errorWidget: (_, _, _) => _fallback(),
+          errorWidget: _fallback(),
         ),
       );
     }

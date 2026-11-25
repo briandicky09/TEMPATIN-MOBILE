@@ -27,8 +27,11 @@
 
 ## Tentang TEMPATIN MOBILE
 
-**TEMPATIN MOBILE** adalah aplikasi mobile native cross-platform (**Android & iOS**) berbasis **Flutter** yang terhubung dengan backend **Laravel 12 + Sanctum REST API (`/api/v1`)**.  
-Dirancang dengan sistem visual *Notion Warm Paper Hybrid* (`#0075DE` Primary, `#F6F5F4` Paper Canvas, tipografi **Inter** & **Source Serif 4**), aplikasi ini menghadirkan pengalaman native yang lengkap untuk **Pencari Kos (Customer)** dan **Pemilik Kos (Owner)**.
+**TEMPATIN MOBILE** adalah aplikasi mobile native cross-platform (**Android & iOS**) berbasis **Flutter** yang mendukung **Dual-Mode Operation**:
+1. **Offline-First Demo Mode (Default pada rilis APK mandiri)**: Berjalan 100% lokal tanpa server atau koneksi internet menggunakan SQLite persisten (`sqflite`), `OfflineDemoInterceptor` untuk seluruh endpoint `/api/v1/*`, foto kos lokal di `assets/images/kos/`, pembuatan PDF Nota & Kontrak offline (`pdf`), simulasi pembayaran aman lokal, serta *Mode Switcher* & *Reset Data Demo* pada halaman Profil / Menu Pemilik.
+2. **Connected Live API Mode**: Terhubung langsung ke backend **Laravel 12 + Sanctum REST API (`/api/v1`)** beserta Midtrans Snap WebView & peta OpenStreetMap interaktif (`--dart-define=OFFLINE_DEMO=false` atau melalui sakelar mode di aplikasi).
+
+Dirancang dengan sistem visual *Notion Warm Paper Hybrid* (`#0075DE` Primary, `#F6F5F4` Paper Canvas, tipografi **Inter** & **Source Serif 4**), aplikasi ini menghadirkan pengalaman native lengkap mulai dari launch splash teranimasi hingga alur **Pencari Kos (Customer)** dan **Pemilik Kos (Owner)**.
 
 ---
 
@@ -128,11 +131,14 @@ flutter build appbundle --release
 
 ---
 
-## Hasil Verifikasi QA Terakhir
+## Hasil Verifikasi QA Terakhir (25 November 2026)
 
 - **`flutter analyze`**: `0 issues found`
-- **`flutter test`**: `21 / 21 passed` (`widget_test`, `phase5_customer_test`, `phase7_transaction_test`, `phase8_9_owner_chat_test`)
-- **Backend Laravel (`php artisan test`)**: `261 passed (934 assertions)`
+- **`flutter test`**: **`26 / 26 passed`** (`offline_demo_polish_test`, `widget_test`, `phase5_customer_test`, `phase7_transaction_test`, `phase8_9_owner_chat_test`)
+- **Android Release APK**: `build/app/outputs/flutter-apk/app-release.apk` (`73.8 MB` / `77,374,361` bytes)
+- **Android Release AAB**: `build/app/outputs/bundle/release/app-release.aab` (`71.5 MB` / `74,947,156` bytes)
+- **Perangkat Fisik (`adb devices -l`)**: `0` perangkat terpasang saat build; uji runtime langsung pada HP Android menunggu perangkat disambungkan.
+- **Backend Laravel (`php artisan test`)**: `261 passed (934 assertions)` pada branch `feature/mobile-api`.
 
 ---
 

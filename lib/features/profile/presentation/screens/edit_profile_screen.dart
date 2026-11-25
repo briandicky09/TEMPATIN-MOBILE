@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +14,7 @@ import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/tempatin_button.dart';
 import '../../../../core/widgets/tempatin_card.dart';
 import '../../../../core/widgets/tempatin_text_field.dart';
+import '../../../../shared/widgets/app_smart_image.dart';
 import '../../../authentication/presentation/providers/auth_session_provider.dart';
 import '../../data/profile_repository.dart';
 
@@ -270,12 +270,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     }
     if (avatarUrl != null && avatarUrl.isNotEmpty) {
       return ClipOval(
-        child: CachedNetworkImage(
-          imageUrl: avatarUrl,
+        child: AppSmartImage(
+          source: avatarUrl,
           width: 88,
           height: 88,
           fit: BoxFit.cover,
-          errorWidget: (_, _, _) => _placeholderCircle(),
+          errorWidget: _placeholderCircle(),
         ),
       );
     }

@@ -2,7 +2,7 @@
 
 > **Dokumentasi Konteks Komprehensif Proyek Aplikasi Mobile Cross-Platform TEMPATIN (Flutter & Dart — Android & iOS)**
 >
-> *Terakhir diperbarui: 21 November 2026 | Status Proyek: **Phase 1–10 Selesai — Aplikasi Terintegrasi, Lolos Automated QA, & Build Release APK/AAB Terverifikasi***
+> *Terakhir diperbarui: 25 November 2026 | Status Proyek: **Final Product Polish & Dual-Mode Offline-First Demo Selesai — Lolos `flutter analyze`, 26/26 Tests, & Release APK/AAB Build***
 
 ---
 
@@ -32,7 +32,8 @@ Aplikasi ini dibangun sebagai produk mobile native yang terpisah dari proyek web
 | **Phase 7** | Transaction Features | **Selesai** | Room selection, Booking (*Owner Approval First*), Midtrans Snap WebView + sync, Invoice, Nota PDF (`printing`/`share_plus`), Kontrak Digital & PDF, Survei, Maintenance, Review. |
 | **Phase 8** | Owner Mobile | **Selesai** | Owner Dashboard live, CRUD Properti + Foto, Room Inventory, Approve/Reject/Check-In/Check-Out, Penghuni Aktif, Survei, Maintenance, Ulasan + Balasan, Analitik `fl_chart`. |
 | **Phase 9** | Advanced Features | **Selesai** | Peta `flutter_map` (OSM + Nominatim), Internal Chat (paginated REST + `after_id` polling saat screen aktif), Notifikasi deep-link routing. |
-| **Phase 10** | Quality Assurance | **Selesai** *(Prasyarat eksternal dicatat)* | `flutter analyze` (0 issue), 21/21 Flutter unit/widget tests pass, 261 PHPUnit tests pass, Release APK (`63.0 MB`) & Release AAB (`60.9 MB`) berhasil dibangun. Uji perangkat fisik menunggu HP Android dicolokkan ke ADB & iOS menunggu macOS/Xcode. |
+| **Phase 10** | Quality Assurance | **Selesai** *(Prasyarat eksternal dicatat)* | `flutter analyze` (0 issue), 21/21 Flutter unit/widget tests pass, 261 PHPUnit tests pass, Release APK & AAB awal terverifikasi. |
+| **Final Polish** | Branding, Splash & Dual-Mode Offline Demo | **Selesai** *(Uji perangkat fisik menunggu ADB)* | Redesain logo vektor & adaptive launcher icon (`flutter_launcher_icons`), native + animated splash (`/splash`, `1.35s`), **Dual-Mode Offline-First Demo** (`sqflite` 18 tabel + `OfflineDemoInterceptor` + PDF lokal + 13 foto kos lokal `assets/images/kos/`), pembayaran simulasi offline-safe, peta offline fallback, mode switcher & reset demo, `flutter analyze` (0 issue), **26/26** Flutter tests pass, Release APK (`73.8 MB` / `77,374,361` bytes) & Release AAB (`71.5 MB` / `74,947,156` bytes) dibangun. |
 
 ---
 
@@ -240,17 +241,17 @@ flutter pub get
 flutter analyze
 flutter test
 
-# 2. Koneksi HP Android fisik via USB Debugging + akses Laravel lokal (port 8000)
+# 2. Koneksi HP Android fisik via USB Debugging + mode server live (opsional)
 adb devices
 flutter devices
 adb reverse tcp:8000 tcp:8000
-flutter run --dart-define=ENV=dev --dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1
+flutter run --dart-define=OFFLINE_DEMO=false --dart-define=ENV=dev --dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1
 
-# 3. Build APK & App Bundle Android (terverifikasi pada 21 Nov 2026)
+# 3. Build APK & App Bundle Android (default Offline-First Demo = true)
 flutter build apk --release
-# Output: build/app/outputs/flutter-apk/app-release.apk (63.0 MB)
+# Output: build/app/outputs/flutter-apk/app-release.apk (73.8 MB / 77,374,361 bytes)
 flutter build appbundle --release
-# Output: build/app/outputs/bundle/release/app-release.aab (60.9 MB)
+# Output: build/app/outputs/bundle/release/app-release.aab (71.5 MB / 74,947,156 bytes)
 ```
 
 ---

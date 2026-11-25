@@ -7,6 +7,7 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_typography.dart';
+import '../../../../core/config/app_mode_provider.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/skeletons.dart';
@@ -24,6 +25,7 @@ class OwnerDashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dashAsync = ref.watch(ownerDashboardProvider);
     final auth = ref.watch(authSessionProvider);
+    final isOfflineDemo = ref.watch(appModeProvider).isOfflineDemo;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,6 +35,10 @@ class OwnerDashboardScreen extends ConsumerWidget {
             Image.asset('assets/images/logo.png', height: 24),
             const SizedBox(width: AppSpacing.sm),
             const StatusBadge(label: 'Owner', tone: StatusTone.info),
+            if (isOfflineDemo) ...[
+              const SizedBox(width: AppSpacing.xs),
+              const StatusBadge(label: 'Offline', tone: StatusTone.neutral),
+            ],
           ],
         ),
         actions: [

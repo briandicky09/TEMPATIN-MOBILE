@@ -57,6 +57,9 @@ dependencies:
   fl_chart: ^1.3.1
   flutter_map: ^8.3.2
   latlong2: ^0.10.1
+  sqflite: ^2.4.1
+  path: ^1.9.0
+  pdf: ^3.11.0
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +75,28 @@ dev_dependencies:
   freezed: ^4.0.3
   json_serializable: ^6.15.2
   mocktail: ^1.0.5
+  flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.4
+  sqflite_common_ffi: ^2.3.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/branding/app_icon_1024.png"
+  adaptive_icon_background: "#0075DE"
+  adaptive_icon_foreground: "assets/branding/app_icon_foreground_1024.png"
+  min_sdk_android: 21
+
+flutter_native_splash:
+  color: "#F6F5F4"
+  image: "assets/branding/splash_symbol_512.png"
+  android_12:
+    color: "#F6F5F4"
+    image: "assets/branding/splash_symbol_512.png"
+    icon_background_color: "#F6F5F4"
+  ios: true
+  web: false
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -80,14 +105,16 @@ dev_dependencies:
 flutter:
 
   # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
+  # included with your application, so that you can use the icons in the
+  # material Icons class.
   uses-material-design: true
 
   assets:
     - assets/images/
+    - assets/images/kos/
+    - assets/branding/
 
-  # An image asset can refer to one or more resolution-specific "variants", see
+  # An image asset can refer to one or more resolution-specific "variants", see the
   # https://flutter.dev/to/resolution-aware-images
 
   # For details regarding adding assets from package dependencies, see
@@ -110,5 +137,5 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/to/font-from-package
+  # For details regarding fonts from package dependencies, see
+  # https://flutter.dev/to/font-from-package

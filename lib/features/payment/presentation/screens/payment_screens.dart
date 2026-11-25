@@ -7,6 +7,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_typography.dart';
+import '../../../../core/config/app_mode_provider.dart';
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/widgets/status_badge.dart';
@@ -38,6 +39,7 @@ class _PaymentSummaryScreenState extends ConsumerState<PaymentSummaryScreen> {
   String? _error;
 
   Future<void> _startMidtrans() async {
+    final isOfflineDemo = ref.read(appModeProvider).isOfflineDemo;
     setState(() {
       _isLoading = true;
       _error = null;
@@ -47,14 +49,25 @@ class _PaymentSummaryScreenState extends ConsumerState<PaymentSummaryScreen> {
           .read(paymentRepositoryProvider)
           .initPayment(widget.bookingCode);
       if (!mounted) return;
-      await Navigator.of(context).push<void>(
-        MaterialPageRoute(
-          builder: (_) => MidtransWebViewScreen(
-            bookingCode: widget.bookingCode,
-            initResult: initRes,
+      if (isOfflineDemo) {
+        await Navigator.of(context).pushReplacement<void, void>(
+          MaterialPageRoute(
+            builder: (_) => PaymentResultScreen(
+              bookingCode: widget.bookingCode,
+              paymentCode: initRes.paymentCode,
+            ),
           ),
-        ),
-      );
+        );
+      } else {
+        await Navigator.of(context).push<void>(
+          MaterialPageRoute(
+            builder: (_) => MidtransWebViewScreen(
+              bookingCode: widget.bookingCode,
+              initResult: initRes,
+            ),
+          ),
+        );
+      }
       ref.invalidate(bookingDetailProvider(widget.bookingCode));
       ref.invalidate(myBookingsProvider);
       ref.invalidate(myInvoicesProvider);
@@ -68,12 +81,17 @@ class _PaymentSummaryScreenState extends ConsumerState<PaymentSummaryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isOfflineDemo = ref.watch(appModeProvider).isOfflineDemo;
     final bookingAsync = widget.booking != null
         ? AsyncData(widget.booking!)
         : ref.watch(bookingDetailProvider(widget.bookingCode));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Pembayaran Midtrans')),
+      appBar: AppBar(
+        title: Text(
+          isOfflineDemo ? 'Simulasi Pembayaran Demo' : 'Pembayaran Midtrans',
+        ),
+      ),
       body: bookingAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text(err.toString())),
@@ -120,12 +138,16 @@ class _PaymentSummaryScreenState extends ConsumerState<PaymentSummaryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Metode Pembayaran Tersedia',
+                    isOfflineDemo
+                        ? 'Simulasi Pembayaran Offline'
+                        : 'Metode Pembayaran Tersedia',
                     style: AppTypography.headingSm,
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Virtual Account (BCA, BNI, BRI, Mandiri), QRIS, GoPay, ShopeePay, dan Kartu Kredit/Debit melalui gerbang resmi Midtrans.',
+                    isOfflineDemo
+                        ? 'Mode Demo Offline aktif: transaksi disimulasikan langsung di database SQLite lokal tanpa membuka gerbang Midtrans atau transaksi uang asli.'
+                        : 'Virtual Account (BCA, BNI, BRI, Mandiri), QRIS, GoPay, ShopeePay, dan Kartu Kredit/Debit melalui gerbang resmi Midtrans.',
                     style: AppTypography.bodySm,
                   ),
                 ],
@@ -150,7 +172,9 @@ class _PaymentSummaryScreenState extends ConsumerState<PaymentSummaryScreen> {
             ],
             const SizedBox(height: AppSpacing.xl),
             TempatinButton(
-              label: 'Lanjut ke Midtrans Snap',
+              label: isOfflineDemo
+                  ? 'Konfirmasi Pembayaran Demo Offline'
+                  : 'Lanjut ke Midtrans Snap',
               icon: LucideIcons.shieldCheck,
               isLoading: _isLoading,
               onPressed: _startMidtrans,

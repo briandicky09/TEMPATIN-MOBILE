@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -9,6 +8,7 @@ import '../../core/utils/currency_formatter.dart';
 import '../../core/widgets/status_badge.dart';
 import '../../core/widgets/tempatin_card.dart';
 import '../models/kos_models.dart';
+import 'app_smart_image.dart';
 
 enum KosCardLayout { vertical, compactList }
 
@@ -257,11 +257,11 @@ class _KosThumbnailImage extends StatelessWidget {
     if (url.isEmpty) {
       return _fallbackBox();
     }
-    return CachedNetworkImage(
-      imageUrl: url,
+    return AppSmartImage(
+      source: url,
       fit: BoxFit.cover,
-      placeholder: (context, _) => Container(color: AppColors.skeletonBase),
-      errorWidget: (context, _, _) => _fallbackBox(),
+      placeholder: Container(color: AppColors.skeletonBase),
+      errorWidget: _fallbackBox(),
     );
   }
 
@@ -314,12 +314,18 @@ class _FavoriteCircleButton extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Icon(
-            isFavorited
-                ? Icons.favorite_rounded
-                : Icons.favorite_border_rounded,
-            size: 18,
-            color: isFavorited ? AppColors.accentCoral : AppColors.inkCharcoal,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 180),
+            transitionBuilder: (child, anim) =>
+                ScaleTransition(scale: anim, child: child),
+            child: Icon(
+              isFavorited
+                  ? Icons.favorite_rounded
+                  : Icons.favorite_border_rounded,
+              key: ValueKey<bool>(isFavorited),
+              size: 18,
+              color: isFavorited ? AppColors.accentCoral : AppColors.inkCharcoal,
+            ),
           ),
         ),
       ),

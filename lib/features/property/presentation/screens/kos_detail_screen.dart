@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -18,6 +17,7 @@ import '../../../../core/widgets/status_badge.dart';
 import '../../../../core/widgets/tempatin_button.dart';
 import '../../../../core/widgets/tempatin_card.dart';
 import '../../../../shared/models/kos_models.dart';
+import '../../../../shared/widgets/app_smart_image.dart';
 import '../../../../shared/widgets/facility_chip.dart';
 import '../../../../shared/widgets/kos_card.dart';
 import '../../../authentication/presentation/providers/auth_session_provider.dart';
@@ -155,12 +155,11 @@ class _KosDetailScreenState extends ConsumerState<KosDetailScreen> {
                             'title': kos.title,
                           },
                         ),
-                        child: CachedNetworkImage(
-                          imageUrl: galleryUrls[index],
+                        child: AppSmartImage(
+                          source: galleryUrls[index],
                           fit: BoxFit.cover,
-                          placeholder: (_, _) =>
-                              Container(color: AppColors.skeletonBase),
-                          errorWidget: (_, _, _) => Container(
+                          placeholder: Container(color: AppColors.skeletonBase),
+                          errorWidget: Container(
                             color: AppColors.neutralBg,
                             child: const Icon(LucideIcons.imageOff),
                           ),
@@ -718,12 +717,12 @@ class _OwnerAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     if (avatarUrl != null && avatarUrl!.isNotEmpty) {
       return ClipOval(
-        child: CachedNetworkImage(
-          imageUrl: avatarUrl!,
+        child: AppSmartImage(
+          source: avatarUrl!,
           width: 44,
           height: 44,
           fit: BoxFit.cover,
-          errorWidget: (_, _, _) => _initialCircle(),
+          errorWidget: _initialCircle(),
         ),
       );
     }

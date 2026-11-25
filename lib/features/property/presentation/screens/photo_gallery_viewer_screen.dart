@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_typography.dart';
+import '../../../../shared/widgets/app_smart_image.dart';
 
 /// Fullscreen pinch-to-zoom swipeable photo gallery for kos property images.
 class PhotoGalleryViewerScreen extends StatefulWidget {
@@ -73,12 +73,13 @@ class _PhotoGalleryViewerScreenState extends State<PhotoGalleryViewerScreen> {
                   minScale: 1,
                   maxScale: 4,
                   child: Center(
-                    child: CachedNetworkImage(
-                      imageUrl: widget.photoUrls[index],
+                    child: AppSmartImage(
+                      source: widget.photoUrls[index],
                       fit: BoxFit.contain,
-                      placeholder: (_, _) =>
-                          const CircularProgressIndicator(color: Colors.white),
-                      errorWidget: (_, _, _) => const Icon(
+                      placeholder: const CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                      errorWidget: const Icon(
                         Icons.broken_image_outlined,
                         color: Colors.white54,
                         size: 48,

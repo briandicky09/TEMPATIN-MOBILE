@@ -31,6 +31,7 @@ import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/property/presentation/screens/explore_screen.dart';
 import '../../features/property/presentation/screens/kos_detail_screen.dart';
 import '../../features/property/presentation/screens/photo_gallery_viewer_screen.dart';
+import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../shared/models/chat_models.dart';
 import '../../shared/models/transaction_models.dart';
 import '../../shared/models/user_model.dart';
@@ -51,11 +52,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   ref.onDispose(refreshNotifier.dispose);
 
   return GoRouter(
-    initialLocation: RoutePaths.home,
+    initialLocation: RoutePaths.splash,
     refreshListenable: refreshNotifier,
     redirect: (context, state) {
       final authState = ref.read(authSessionProvider);
       final path = state.uri.path;
+      if (path == RoutePaths.splash) {
+        return null;
+      }
+
       final isAuthenticated = authState.isAuthenticated;
       final isOwner = authState.role == UserRole.owner;
       final isOwnerRoute = path.startsWith('/owner');
@@ -93,10 +98,28 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
+      // Launch Splash Screen
+      GoRoute(
+        path: RoutePaths.splash,
+        pageBuilder: (context, state) => CustomTransitionPage<void>(
+          key: state.pageKey,
+          child: const SplashScreen(),
+          transitionDuration: const Duration(milliseconds: 280),
+          transitionsBuilder: (_, animation, _, child) =>
+              FadeTransition(opacity: animation, child: child),
+        ),
+      ),
+
       // Customer / Guest 5-Tab Shell
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            CustomerShell(navigationShell: navigationShell),
+        pageBuilder: (context, state, navigationShell) =>
+            CustomTransitionPage<void>(
+              key: state.pageKey,
+              child: CustomerShell(navigationShell: navigationShell),
+              transitionDuration: const Duration(milliseconds: 320),
+              transitionsBuilder: (_, animation, _, child) =>
+                  FadeTransition(opacity: animation, child: child),
+            ),
         branches: [
           StatefulShellBranch(
             routes: [
@@ -143,8 +166,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // Property Owner 5-Tab Shell
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            OwnerShell(navigationShell: navigationShell),
+        pageBuilder: (context, state, navigationShell) =>
+            CustomTransitionPage<void>(
+              key: state.pageKey,
+              child: OwnerShell(navigationShell: navigationShell),
+              transitionDuration: const Duration(milliseconds: 320),
+              transitionsBuilder: (_, animation, _, child) =>
+                  FadeTransition(opacity: animation, child: child),
+            ),
         branches: [
           StatefulShellBranch(
             routes: [

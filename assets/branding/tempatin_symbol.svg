@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Minimalist architectural doorway/roof + warm pin dot for TEMPATIN -->
+  <rect width="512" height="512" rx="112" fill="#0075DE"/>
+  <!-- Crisp house / roof outline -->
+  <path d="M120 236 L256 124 L392 236" stroke="#FFFFFF" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Architectural walls + doorway threshold -->
+  <path d="M156 216 V366 C156 377.046 164.954 386 176 386 H336 C347.046 386 356 377.046 356 366 V216" stroke="#FFFFFF" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Modern arched doorway (open space to stay) -->
+  <path d="M214 386 V292 C214 268.804 232.804 250 256 250 C279.196 250 298 268.804 298 292 V386" fill="#FFFFFF"/>
+  <!-- Subtle warm-paper location dot inside doorway -->
+  <circle cx="256" cy="296" r="16" fill="#0075DE"/>
+</svg>

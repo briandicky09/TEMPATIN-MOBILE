@@ -8,17 +8,26 @@ import '../../domain/auth_state.dart';
 
 /// Central Riverpod session controller integrated with Sanctum `/api/v1/auth/*`.
 class AuthSessionNotifier extends Notifier<AuthState> {
-  bool _restoreAttempted = false;
+  Future<void>? _restoreFuture;
 
   @override
   AuthState build() => const AuthGuest();
 
-  Future<void> restoreSession() async {
-    if (_restoreAttempted) return;
-    _restoreAttempted = true;
+  Future<void> restoreSession() {
+    return _restoreFuture ??= _performRestoreSession();
+  }
 
+  Future<void> _performRestoreSession() async {
     final storage = ref.read(secureStorageProvider);
-    final token = await storage.readToken();
+    String? token;
+    try {
+      token = await storage.readToken().timeout(
+        const Duration(milliseconds: 500),
+        onTimeout: () => null,
+      );
+    } catch (_) {
+      return;
+    }
     if (token == null || token.isEmpty) return;
 
     try {

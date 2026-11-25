@@ -7,8 +7,10 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_typography.dart';
+import '../../../../core/config/app_mode_provider.dart';
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../../core/widgets/status_badge.dart';
 import '../../../../core/widgets/tempatin_button.dart';
 import '../../../../core/widgets/tempatin_card.dart';
 import '../../../../core/widgets/tempatin_text_field.dart';
@@ -76,8 +78,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  void _fillDemoAccount(String email, String password) {
+    _emailController.text = email;
+    _passwordController.text = password;
+    setState(() {
+      _errorMessage = null;
+      _fieldErrors = const {};
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isOfflineDemo = ref.watch(appModeProvider).isOfflineDemo;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Masuk')),
       body: SingleChildScrollView(
@@ -190,6 +203,61 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
+              if (isOfflineDemo) ...[
+                TempatinCard(
+                  backgroundColor: AppColors.canvas,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Akun Demo Offline',
+                            style: AppTypography.headingSm,
+                          ),
+                          const StatusBadge(
+                            label: 'Simulasi',
+                            tone: StatusTone.info,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Ketuk untuk mengisi kredensial demo (kata sandi: password123):',
+                        style: AppTypography.caption,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TempatinButton(
+                              label: 'Customer (Dewi)',
+                              variant: TempatinButtonVariant.secondary,
+                              onPressed: () => _fillDemoAccount(
+                                'dewi@email.com',
+                                'password123',
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
+                            child: TempatinButton(
+                              label: 'Owner (Budi)',
+                              variant: TempatinButtonVariant.outlined,
+                              onPressed: () => _fillDemoAccount(
+                                'owner@tempatin.id',
+                                'password123',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+              ],
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

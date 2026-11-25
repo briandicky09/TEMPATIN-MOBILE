@@ -1,14 +1,18 @@
 /// Build-time environment configuration supplied via `--dart-define`.
 ///
-/// Physical device (recommended via `adb reverse tcp:8000 tcp:8000`):
-/// `flutter run --dart-define=ENV=dev --dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1`
-///
-/// Local LAN IP alternative:
-/// `flutter run --dart-define=ENV=dev --dart-define=API_BASE_URL=http://192.168.x.x:8000/api/v1`
+/// Offline Demo Mode defaults to `true` so standalone APK/bundle installs
+/// operate completely offline with local SQLite persistence, bundled assets,
+/// and zero localhost/server requirements. Pass `--dart-define=OFFLINE_DEMO=false`
+/// (or toggle from App Settings) to connect to a live Laravel REST backend.
 abstract final class AppEnv {
   static const String envName = String.fromEnvironment(
     'ENV',
     defaultValue: 'dev',
+  );
+
+  static const bool defaultOfflineDemo = bool.fromEnvironment(
+    'OFFLINE_DEMO',
+    defaultValue: true,
   );
 
   /// Defaults to `127.0.0.1:8000` for physical Android USB debugging (`adb reverse tcp:8000 tcp:8000`).

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Android adaptive foreground safe-zone centered mark on transparent background -->
+  <path d="M148 240 L256 150 L364 240" stroke="#FFFFFF" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M178 224 V348 C178 356.837 185.163 364 194 364 H318 C326.837 364 334 356.837 334 348 V224" stroke="#FFFFFF" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M222 364 V288 C222 269.222 237.222 254 256 254 C274.778 254 290 269.222 290 288 V364" fill="#FFFFFF"/>
+  <circle cx="256" cy="292" r="13" fill="#0075DE"/>
+</svg>

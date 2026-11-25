@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 256" fill="none">
+  <!-- Symbol badge -->
+  <rect x="24" y="24" width="208" height="208" rx="48" fill="#0075DE"/>
+  <path d="M72 120 L128 74 L184 120" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M88 112 V174 C88 178.418 91.582 182 96 182 H160 C164.418 182 168 178.418 168 174 V112" stroke="#FFFFFF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M111 182 V144 C111 134.611 118.611 127 128 127 C137.389 127 145 134.611 145 144 V182" fill="#FFFFFF"/>
+  <circle cx="128" cy="146" r="7" fill="#0075DE"/>
+  <!-- Editorial wordmark -->
+  <text x="272" y="152" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="96" font-weight="800" letter-spacing="4">TEMPATIN</text>
+  <rect x="276" y="176" width="84" height="6" rx="3" fill="#0075DE"/>
+</svg>

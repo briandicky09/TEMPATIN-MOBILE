@@ -7,7 +7,7 @@ import '../../app/theme/app_typography.dart';
 enum TempatinButtonVariant { primary, secondary, outlined, ghost, danger }
 
 /// Standardized touch-friendly button (48dp height, 8dp radius) matching DESIGN_SYSTEM.md.
-class TempatinButton extends StatelessWidget {
+class TempatinButton extends StatefulWidget {
   const TempatinButton({
     super.key,
     required this.label,
@@ -26,10 +26,17 @@ class TempatinButton extends StatelessWidget {
   final bool fullWidth;
 
   @override
-  Widget build(BuildContext context) {
-    final bool disabled = onPressed == null || isLoading;
+  State<TempatinButton> createState() => _TempatinButtonState();
+}
 
-    final (Color bg, Color fg, BorderSide? border) = switch (variant) {
+class _TempatinButtonState extends State<TempatinButton> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final bool disabled = widget.onPressed == null || widget.isLoading;
+
+    final (Color bg, Color fg, BorderSide? border) = switch (widget.variant) {
       TempatinButtonVariant.primary => (AppColors.primary, Colors.white, null),
       TempatinButtonVariant.secondary => (
         AppColors.primaryTint,
@@ -53,7 +60,7 @@ class TempatinButton extends StatelessWidget {
       ),
     };
 
-    final child = isLoading
+    final child = widget.isLoading
         ? SizedBox(
             width: 18,
             height: 18,
@@ -66,13 +73,13 @@ class TempatinButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (icon != null) ...[
-                Icon(icon, size: 18, color: fg),
+              if (widget.icon != null) ...[
+                Icon(widget.icon, size: 18, color: fg),
                 const SizedBox(width: AppSpacing.sm),
               ],
               Flexible(
                 child: Text(
-                  label,
+                  widget.label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.label.copyWith(
@@ -84,21 +91,29 @@ class TempatinButton extends StatelessWidget {
             ],
           );
 
-    return SizedBox(
-      width: fullWidth ? double.infinity : null,
-      height: 48,
-      child: Material(
-        color: disabled ? bg.withValues(alpha: 0.55) : bg,
-        shape: RoundedRectangleBorder(
-          borderRadius: AppRadii.buttonRadius,
-          side: border ?? BorderSide.none,
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: disabled ? null : onPressed,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-            child: Center(child: child),
+    return AnimatedScale(
+      scale: _pressed && !disabled ? 0.985 : 1.0,
+      duration: const Duration(milliseconds: 110),
+      curve: Curves.easeOut,
+      child: SizedBox(
+        width: widget.fullWidth ? double.infinity : null,
+        height: 48,
+        child: Material(
+          color: disabled ? bg.withValues(alpha: 0.55) : bg,
+          shape: RoundedRectangleBorder(
+            borderRadius: AppRadii.buttonRadius,
+            side: border ?? BorderSide.none,
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: disabled ? null : widget.onPressed,
+            onHighlightChanged: (v) {
+              if (_pressed != v) setState(() => _pressed = v);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              child: Center(widthFactor: widget.fullWidth ? null : 1, child: child),
+            ),
           ),
         ),
       ),

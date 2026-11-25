@@ -1,6 +1,6 @@
 # Deployment & QA Checklist — TEMPATIN MOBILE
 
-> Verification Baseline: **21 November 2026** | Application ID: `com.tempatin.mobile`
+> Verification Baseline: **25 November 2026** | Application ID: `com.tempatin.mobile`
 
 ---
 
@@ -8,25 +8,38 @@
 
 | Layer | Command | Result | Scope |
 | :--- | :--- | :--- | :--- |
-| **Flutter Static Analysis** | `flutter analyze` | **0 issues found** (`3.3s`) | Full `lib/` + `test/` across Phases 1–10 |
-| **Flutter Unit & Widget Tests** | `flutter test` | **21/21 passed** (`7s`) | `widget_test.dart`, `phase5_customer_test.dart`, `phase7_transaction_test.dart`, `phase8_9_owner_chat_test.dart` |
-| **Android Release APK** | `flutter build apk --release` | **Passed** (`675.4s`) | `build/app/outputs/flutter-apk/app-release.apk` (`63.0 MB` / `66,036,167` bytes) |
-| **Android Release App Bundle** | `flutter build appbundle --release` | **Passed** (`101.2s`) | `build/app/outputs/bundle/release/app-release.aab` (`60.9 MB` / `63,886,159` bytes) |
-| **Laravel 12 Backend Suite** | `php artisan test` | **261 passed, 934 assertions** (`34.21s`) | Existing web suite + `MobileApiTest` (`feature/mobile-api`) |
+| **Flutter Static Analysis** | `flutter analyze` | **0 issues found** (`11.8s`) | Full `lib/` + `test/` (incl. Final Polish & Offline Demo SQLite layer) |
+| **Flutter Unit, E2E & Widget Tests** | `flutter test` | **26/26 passed** (`11s`) | `offline_demo_polish_test.dart`, `widget_test.dart`, `phase5_customer_test.dart`, `phase7_transaction_test.dart`, `phase8_9_owner_chat_test.dart` |
+| **Android Release APK** | `flutter build apk --release` | **Passed** (`295.6s`) | `build/app/outputs/flutter-apk/app-release.apk` (`73.8 MB` / `77,374,361` bytes) |
+| **Android Release App Bundle** | `flutter build appbundle --release` | **Passed** (`66.0s`) | `build/app/outputs/bundle/release/app-release.aab` (`71.5 MB` / `74,947,156` bytes) |
+| **Physical Device Check** | `adb devices -l` | **0 devices attached** | Hardware USB runtime check pending physical Android device attachment |
+| **Laravel 12 Backend Suite** | `php artisan test` | **261 passed, 934 assertions** *(prior Phase 6 run)* | Existing web suite + `MobileApiTest` (`feature/mobile-api`) |
 
 ---
 
-## 2. Environment & Build Configuration (`--dart-define`)
+## 2. Final Polish & Dual-Mode Architecture Summary
 
-`lib/core/config/env.dart` reads compile-time constants so no secrets or staging URLs are hardcoded in production binaries:
+- **Branding & Icons**: Vector SVG masters in `assets/branding/` (`tempatin_symbol.svg`, `tempatin_logo.svg`, `tempatin_icon_foreground.svg`), supersampled raster exports (`app_icon_1024.png`, `app_icon_foreground_1024.png`, `splash_symbol_512.png`, `assets/images/logo.png`, `logo-symbol.png`), and Android/iOS launcher icons generated via `flutter_launcher_icons`.
+- **Native & Animated Splash**: Android 12+ splash & launch background configured via `flutter_native_splash` (`#F6F5F4`), transitioning seamlessly into animated `SplashScreen` (`/splash`, 1.35s fade/scale/accent-line/wordmark) with session restore timeout safety.
+- **Offline-First Demo Mode (Default)**: Persistent local SQLite database (`OfflineDemoDatabase` via `sqflite`) seeded idempotently with realistic Indonesian kos listings, bundled photos (`assets/images/kos/*`), full `/api/v1/*` in-process handling (`OfflineDemoInterceptor`), offline PDF generation (`OfflineDemoPdfBuilder` via `pdf`), simulated Demo Offline payment confirmation, offline architectural coordinate map fallback/preset picker, runtime font HTTP disabled offline (`GoogleFonts.config.allowRuntimeFetching = false`), 1-tap demo login helpers, and runtime *Mode Switcher* + *Reset Data Demo*.
+
+---
+
+## 3. Environment & Build Configuration (`--dart-define`)
+
+`lib/core/config/env.dart` reads compile-time constants (`OFFLINE_DEMO` defaults to `true` for standalone offline APK/demo usage):
 
 ```powershell
-# Local Physical Android Phone + Laravel Artisan Serve (Port 8000)
-adb reverse tcp:8000 tcp:8000
-flutter run --dart-define=ENV=dev --dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1
+# Standalone Offline Demo Build (Default)
+flutter build apk --release
 
-# Production Release APK / AAB
+# Local Physical Android Phone + Laravel Artisan Serve (Port 8000, Live API Mode)
+adb reverse tcp:8000 tcp:8000
+flutter run --dart-define=OFFLINE_DEMO=false --dart-define=ENV=dev --dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1
+
+# Production Release APK / AAB Connected to Live Server
 flutter build appbundle --release `
+  --dart-define=OFFLINE_DEMO=false `
   --dart-define=ENV=prod `
   --dart-define=API_BASE_URL=https://api.tempatin.example.com/api/v1
 ```

@@ -8,6 +8,7 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_typography.dart';
+import '../../../../core/config/app_mode_provider.dart';
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/skeletons.dart';
@@ -41,14 +42,24 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authSessionProvider);
     final homeAsync = ref.watch(homeProvider);
+    final isOfflineDemo = ref.watch(appModeProvider).isOfflineDemo;
 
     return Scaffold(
       appBar: AppBar(
         titleSpacing: AppSpacing.lg,
-        title: Image.asset(
-          'assets/images/logo.png',
-          height: 26,
-          fit: BoxFit.contain,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              height: 26,
+              fit: BoxFit.contain,
+            ),
+            if (isOfflineDemo) ...[
+              const SizedBox(width: AppSpacing.sm),
+              const StatusBadge(label: 'Demo Offline', tone: StatusTone.info),
+            ],
+          ],
         ),
         actions: [
           _BadgeIconButton(
@@ -60,13 +71,7 @@ class HomeScreen extends ConsumerWidget {
                 context.push(RoutePaths.login);
                 return;
               }
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Fitur Pesan internal diaktifkan pada Phase 9.',
-                  ),
-                ),
-              );
+              context.push(RoutePaths.chats);
             },
           ),
           _BadgeIconButton(

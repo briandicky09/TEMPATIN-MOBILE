@@ -9,6 +9,7 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_typography.dart';
+import '../../../../core/config/app_mode_provider.dart';
 import '../../../../core/errors/app_exception.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/widgets/app_empty_state.dart';
@@ -161,10 +162,12 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
   void initState() {
     super.initState();
     _loadInitial();
-    _pollTimer = Timer.periodic(
-      const Duration(seconds: 6),
-      (_) => _pollNewMessages(),
-    );
+    if (!ref.read(appModeProvider).isOfflineDemo) {
+      _pollTimer = Timer.periodic(
+        const Duration(seconds: 6),
+        (_) => _pollNewMessages(),
+      );
+    }
   }
 
   @override

@@ -1,5 +1,8 @@
 /// Centralized route paths for GoRouter across Guest, Customer, and Owner flows.
 abstract final class RoutePaths {
+  // Brand Launch Splash
+  static const String splash = '/splash';
+
   // Customer / Guest 5-tab shell
   static const String home = '/home';
   static const String explore = '/explore';
